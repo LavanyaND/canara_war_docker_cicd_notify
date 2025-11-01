@@ -140,25 +140,33 @@ pipeline {
                 '''
             }
         }
+        stage('Clean Docker Environment') {
+            when {
+                allOf {
+                    expression { params.ENVIRONMENT == 'prod' }
+                    expression { params.ACTION == 'clean' }
+                }
+            }
+            steps {
+                sh '''
+                    echo "Cleaning Docker Container & Image..."
+                    if [ "$(sudo docker ps -aq -f name=$DOCKER_CONTAINER)" ]; then
+                        echo "Removing existing container $DOCKER_CONTAINER"
+                        sudo docker rm -f $DOCKER_CONTAINER
+                    else
+                        echo "No container found with name $DOCKER_CONTAINER"
+                    fi
+                    if sudo docker images | grep -q "$DOCKER_IMAGE"; then
+                        echo "Removing docker image $DOCKER_IMAGE"
+                        sudo docker rmi -f $DOCKER_IMAGE:latest
+                    else
+                        echo "No image found with name $DOCKER_IMAGE"
+                    fi
+                    echo "Cleanup Completed!"
+                '''
+            }
+        }
 
-
-        // stage('Remove Docker Container') {
-        //     when {
-        //         allOf {
-        //             expression { params.ENVIRONMENT == 'prod' }
-        //             expression { params.ACTION == 'remove' }
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             if [ "$(sudo docker ps -q -f name=canara_app_sak)" ]; then
-        //                 sudo docker rm -f canara_app_sak
-        //             else
-        //                 echo "Container canara_app_sak is not running."
-        //             fi
-        //         '''
-        //     }
-        // }
     }
     post {
         always {
