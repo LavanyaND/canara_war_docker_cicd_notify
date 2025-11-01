@@ -1,62 +1,71 @@
 #!/bin/bash
-# ./jenkins_notify.sh
-# Usage: ./jenkins_notify.sh <STATUS> <JOB_NAME> <BUILD_ID> "<comma,separated,emails>"
-#
-# Designed & Developed by Sak_Shetty
+# ---------------------------------------------------
+# ✅ Jenkins Gmail Notification Script
+# ✅ Designed & Developed by: sak_shetty
+# ---------------------------------------------------
+
+LOG_DIR="/opt/scripts/logs"
+LOG_FILE="$LOG_DIR/jenkins_notify_$(date +%F).log"
+
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+
+# Auto grant execute permission if missing
+if [ ! -x "$0" ]; then
+  echo "🔐 Fixing script execute permission..." | tee -a "$LOG_FILE"
+  chmod +x "$0"
+fi
 
 STATUS="$1"
 JOB_NAME="$2"
 BUILD_ID="$3"
-RECEIVERS="$4"
+TO_EMAIL="$4"
 
-# fallback
-[ -z "$RECEIVERS" ] && RECEIVERS="defaultteam@example.com"
-# convert comma separated to space-separated
-TO_LIST=$(echo "$RECEIVERS" | sed 's/,/ /g')
+GMAIL_USER="${GMAIL_USER}"
+GMAIL_APP_PASS="${GMAIL_APP_PASS}"
 
-# Jenkins-provided credentials (set via withCredentials in pipeline)
-GMAIL_USER="${GMAIL_USER:-}"
-GMAIL_PASS="${GMAIL_APP_PASS:-}"
-
-# Install mailx if not present (idempotent)
-if ! command -v mailx &> /dev/null; then
-  echo "📦 mailx not found — installing..."
-  sudo apt-get update -y
-  sudo apt-get install -y mailutils heirloom-mailx
-else
-  echo "✅ mailx installed — skipping"
-fi
-
-# Email content
-TIMESTAMP="$(date --rfc-3339=seconds)"
-SUBJECT_PREFIX="[Canara CI/CD]"
-SUBJECT="$SUBJECT_PREFIX $STATUS: $JOB_NAME #$BUILD_ID"
-SUBJECT="$SUBJECT - Designed & Developed by Sak_Shetty"
-
-BODY="$(cat <<EOF
-Build Status : $STATUS
-Job Name     : $JOB_NAME
-Build ID     : $BUILD_ID
-Date         : $TIMESTAMP
-Build URL    : ${BUILD_URL:-N/A}
-
-This notification was Designed & Developed by Sak_Shetty
-EOF
-)"
-
-# Send email using mailx with Gmail SMTP
-echo -e "$BODY" | mailx \
-  -S smtp="smtp.gmail.com:587" \
-  -S smtp-use-starttls \
-  -S smtp-auth=login \
-  -S smtp-auth-user="$GMAIL_USER" \
-  -S smtp-auth-password="$GMAIL_PASS" \
-  -S ssl-verify=ignore \
-  -s "$SUBJECT" $TO_LIST
-
-if [ $? -eq 0 ]; then
-  echo "✅ Mail sent successfully to: $TO_LIST"
-else
-  echo "❌ Mail sending failed"
+if [ -z "$STATUS" ] || [ -z "$JOB_NAME" ] || [ -z "$BUILD_ID" ] || [ -z "$TO_EMAIL" ]; then
+  echo "❌ Missing arguments" | tee -a "$LOG_FILE"
+  echo "Usage: ./jenkins_notify.sh <STATUS> <JOB_NAME> <BUILD_ID> <RECEIVER_EMAIL>" | tee -a "$LOG_FILE"
   exit 1
 fi
+
+# Install required packages if missing
+if ! command -v ssmtp >/dev/null 2>&1; then
+  echo "📦 Installing ssmtp & mailutils..." | tee -a "$LOG_FILE"
+  sudo apt-get update -y >> "$LOG_FILE" 2>&1
+  sudo apt-get install ssmtp mailutils -y >> "$LOG_FILE" 2>&1
+fi
+
+echo "⚙️ Configuring ssmtp..." | tee -a "$LOG_FILE"
+sudo bash -c "cat > /etc/ssmtp/ssmtp.conf <<EOF
+root=$GMAIL_USER
+mailhub=smtp.gmail.com:587
+AuthUser=$GMAIL_USER
+AuthPass=$GMAIL_APP_PASS
+UseSTARTTLS=YES
+UseTLS=YES
+hostname=localhost
+FromLineOverride=YES
+EOF"
+
+SUBJECT="Jenkins Build Notification - $JOB_NAME (#$BUILD_ID)"
+BODY="
+Hello,
+
+Jenkins job finished.
+
+✅ Job: $JOB_NAME
+🔢 Build: $BUILD_ID
+📌 Status: $STATUS
+👨‍💻 Designed & Developed by: sak_shetty
+
+Regards,
+Jenkins Notification Service
+"
+
+echo "📤 Sending email to $TO_EMAIL..." | tee -a "$LOG_FILE"
+echo "$BODY" | mail -s "$SUBJECT" "$TO_EMAIL" 2>&1 | tee -a "$LOG_FILE"
+
+echo "✅ Email sent at $(date)" | tee -a "$LOG_FILE"
+exit 0
