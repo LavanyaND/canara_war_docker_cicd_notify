@@ -1,53 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canara DevOps Pipeline</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anime Dream Land</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  body{background:#0c0c1d;color:white;}
+
+  /* HEADER */
+  header{
+    padding:15px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(2px);
+    position:sticky;top:0;z-index:10;
+    
+  }
+  header h1{color:#ff6be6;font-size:28px;font-weight:700;}
+  nav a{
+    color:#ddd;text-decoration:none;margin-left:25px;font-weight:600;
+    transition:.3s;
+  }
+  nav a:hover{color:#ff6be6;}
+
+  /* HERO */
+  .hero{
+    height:100vh;
+    background:url('https://wallpapercave.com/wp/wp6661530.jpg') center/cover no-repeat;
+    background-size: 100% 100%;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;position:relative;
+  }
+  .hero::after{
+    content:'';position:absolute;top:0;left:0;width:100%;height:100%;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.4), #0c0c1d);
+  }
+  .hero-content{position:relative;z-index:2;}
+  .hero h2{font-size:55px;text-shadow:0 4px 10px black;}
+  .hero p{font-size:20px;margin-top:10px;opacity:.9;}
+  .btn{
+    padding:12px 35px;background:#ff6be6;border-radius:40px;
+    display:inline-block;margin-top:25px;font-weight:700;
+    text-decoration:none;color:white;transition:.3s;
+  }
+  .btn:hover{transform:scale(1.1);}
+
+  /* ANIME CAROUSEL */
+  .carousel{
+    margin:-90px auto;width:90%;overflow-x:auto;white-space:nowrap;padding-bottom:15px;position: relative;bottom: 120px;
+  }
+  .carousel::-webkit-scrollbar{height:8px;}
+  .carousel::-webkit-scrollbar-thumb{background:#ff6be6;border-radius:50px;}
+  .anime-box{
+    
+    display:inline-block;width:200px;margin-right:20px;background:#161625;
+    border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.4);
+    overflow:hidden;transition:.3s;
+  }
+  .anime-box:hover{transform:translateY(-6px);}
+  .anime-box img{width:100%;height:330px;object-fit:cover;}
+  .anime-box h3{text-align:center;margin:12px 0;color:#ff6be6;}
+
+  /* FOOTER */
+  footer{
+    text-align:center;padding:20px;margin-top:40px;
+    background:#111;border-top:1px solid #222;color:#aaa;
+  }
+</style>
 </head>
-
 <body>
-  <header>
-    <div class="container">
-      <h1>Canara Project</h1>
-      <nav>
-        <ul>
-          <li><a href="#pipeline">Pipeline</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
 
-  <section id="hero">
-    <h2>AWS → GitHub → Jenkins → Maven → Tomcat → Docker</h2>
-    <p>Enterprise-grade Automated CI/CD Deployment Pipeline</p>
-    <a href="#pipeline">Explore Pipeline</a>
-  </section>
+<header>
+  <h1>Anime Dream Land</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#top">Top Anime</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
 
-  <section id="pipeline">
-    <h3>Deployment Architecture</h3>
-    <div class="pipeline-grid">
-      <div class="pipeline-box">AWS EC2<br><small>Cloud Compute</small></div>
-      <div class="pipeline-box">GitHub<br><small>Source Control</small></div>
-      <div class="pipeline-box">Jenkins<br><small>CI/CD Automation</small></div>
-      <div class="pipeline-box">Maven<br><small>Build System</small></div>
-      <div class="pipeline-box">Tomcat<br><small>Application Server</small></div>
-      <div class="pipeline-box">Docker<br><small>Container Deploy</small></div>
-    </div>
-  </section>
+<section class="hero" id="home">
+    
+  <div class="hero-content">
+    <h2>Welcome to Anime Dream Land</h2>
+    <p>Fall into a universe of heroes, legends and unforgettable stories.</p>
+    <a href="#top" class="btn">Browse Top Anime</a>
+  </div>
+</section>
 
-  <section id="about">
-    <h3>About Project</h3>
-    <p>This project demonstrates a modern DevOps pipeline with automated build,
-    test & deployment on cloud servers using AWS EC2, GitHub, Jenkins, Maven,
-    Tomcat & Docker.</p>
-  </section>
+<div class="carousel" id="top">
+  <div class="anime-box">
+    <img src="https://applescoop.org/image/wallpapers/iphone/naruto-manga-japanese-ninja-anime-cartoon-colorful-otaku-shonen-konoha-28-10-2024-1730151515-hd-wallpaper.jpg" />
+    <h3>Naruto</h3>
+  </div>
+  <div class="anime-box">
+    <img src="https://wallpapercave.com/wp/wp14836962.webp" />
+    <h3>Demon Slayer</h3>
+  </div>
+  <div class="anime-box">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.fD9D3wPpfSAdb6WkQulFAQAAAA?cb=ucfimg2&ucfimg=1&w=426&h=600&rs=1&pid=ImgDetMain&o=7&rm=3" />
+    <h3>One Piece</h3>
+  </div>
+  <div class="anime-box">
+    <img src="https://wallpapercave.com/wp/wp9556400.jpg" />
+    <h3>AOT</h3>
+  </div>
+  <div class="anime-box">
+    <img src="https://pbs.twimg.com/media/EjRWBdTVkAA0CyM?format=jpg&name=4096x4096" />
+    <h3>Jujutsu Kaisen</h3>
+  </div>
+  <div class="anime-box">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.KNS83sm06HxChhzKXM9VHAHaKe?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" />
+    <h3>Tokyo Ghoul</h3>
+  </div>
+</div>
 
-  <footer>
-    Designed & Developed by <strong>sak_shetty</strong>
-  </footer>
+<footer id="contact">© 2025 Anime Dream Land — For True Anime Fans</footer>
+
 </body>
 </html>
