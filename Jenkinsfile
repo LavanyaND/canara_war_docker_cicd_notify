@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKERHUB_USERNAME = 'sakit333'
+        DOCKERHUB_USERNAME = 'lavanyand'
         DOCKER_IMAGE = "${DOCKERHUB_USERNAME}/canara_sak"
         DOCKER_CONTAINER = 'canara_app_sak'
     }
@@ -10,7 +10,7 @@ pipeline {
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select deployment environment')
         choice(name: 'ACTION', choices: ['deploy', 'remove'], description: 'Select action to perform')
-        string(name: 'RECEIVER_EMAIL', defaultValue: 'sak@gmail.com', description: 'Comma-separated recipient emails')
+        string(name: 'RECEIVER_EMAIL', defaultValue: 'dhanupriyadhanush17@gmail.com', description: 'Comma-separated recipient emails')
     }
 
     stages {
